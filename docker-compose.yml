@@ -1,0 +1,35 @@
+services:
+  web:
+    build: .
+    container_name: app_php_apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - rede_interna
+
+  db:
+    image: mysql:8.0
+    container_name: db_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 5238
+      MYSQL_DATABASE: sistema_cadastro
+      MYSQL_USER: gabriel
+      MYSQL_PASSWORD: 5238
+    volumes:
+      - dados_mysql:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - rede_interna
+    ports:
+      - "3306:3306"
+
+volumes:
+  dados_mysql:
+
+networks:
+  rede_interna:
+    driver: bridge
